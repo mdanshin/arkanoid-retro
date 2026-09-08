@@ -13,6 +13,6 @@ The Web Audio soundtrack is an original four-voice chiptune with three melodic p
 - P or Escape: pause/resume. Switching away automatically pauses.
 - R: restart. F: fullscreen (supported browsers). M: mute/unmute.
 
-Serve `dist/` from any static web server. The directory contains authored JavaScript modules and assets; no dependency installation or application build is needed. `make-font.py` regenerates the original bitmap alphabet and WOFF display font using fontTools.
+The repository root is ready for GitHub Pages: select the `main` branch and `/ (root)` folder in **Settings → Pages**. No dependency installation or application build is needed. `make-font.py` regenerates the original bitmap alphabet and WOFF display font using fontTools.
 
 This is an unofficial recreation with new level interpretations, graphics and music, inspired by Taito's Arkanoid and its Atari ST conversion. It does not include original game ROMs or extracted assets.

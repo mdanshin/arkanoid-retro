@@ -74,7 +74,7 @@ patterns={
 }
 for c,latin in {'А':'A','В':'B','Е':'E','К':'K','М':'M','Н':'H','О':'O','Р':'P','С':'C','Т':'T','Х':'X'}.items(): patterns[c]=patterns[latin]
 root=Path(__file__).parent
-(root/'dist/font.js').write_text('const FONT='+json.dumps(patterns,ensure_ascii=False)+';\nexport function pixelText(ctx,text,x,y,scale=2,color="#eee",align="left"){text=String(text).toUpperCase();const width=text.length*6*scale-scale;if(align==="center")x-=width/2;if(align==="right")x-=width;ctx.fillStyle=color;for(const c of text){const rows=FONT[c]||FONT["?"];for(let r=0;r<7;r++)for(let col=0;col<5;col++)if(rows[r][col]==="1")ctx.fillRect(Math.round(x+col*scale),Math.round(y+r*scale),scale,scale);x+=6*scale;}}\n',encoding='utf-8')
+(root/'font.js').write_text('const FONT='+json.dumps(patterns,ensure_ascii=False)+';\nexport function pixelText(ctx,text,x,y,scale=2,color="#eee",align="left"){text=String(text).toUpperCase();const width=text.length*6*scale-scale;if(align==="center")x-=width/2;if(align==="right")x-=width;ctx.fillStyle=color;for(const c of text){const rows=FONT[c]||FONT["?"];for(let r=0;r<7;r++)for(let col=0;col<5;col++)if(rows[r][col]==="1")ctx.fillRect(Math.round(x+col*scale),Math.round(y+r*scale),scale,scale);x+=6*scale;}}\n',encoding='utf-8')
 fb=FontBuilder(800,isTTF=True)
 order=['.notdef']+[f'uni{ord(c):04X}' for c in patterns]
 fb.setupGlyphOrder(order)
@@ -95,5 +95,5 @@ for c,rows in patterns.items():
 fb.setupGlyf(glyphs);fb.setupHorizontalMetrics(metrics);fb.setupHorizontalHeader(ascent=750,descent=-50)
 fb.setupNameTable({'familyName':'Arcade','styleName':'Regular','uniqueFontIdentifier':'ArcadeOriginal5x7','fullName':'Arcade Regular','psName':'Arcade-Regular'})
 fb.setupOS2(sTypoAscender=750,sTypoDescender=-50,usWinAscent=750,usWinDescent=50)
-fb.setupPost();fb.setupMaxp();fb.font.flavor='woff';fb.save(root/'dist/arcade.woff')
+fb.setupPost();fb.setupMaxp();fb.font.flavor='woff';fb.save(root/'arcade.woff')
 print('Generated original pixel font: 80+ glyphs, Cyrillic and Latin.')
