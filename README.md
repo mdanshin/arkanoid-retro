@@ -1,18 +1,41 @@
-# Arkanoid — Retro Arcade
+# ARKANOID — Classic & Neon Horizon
 
-A complete browser arcade game inspired by Arkanoid on Atari ST. The main gameplay uses a deterministic 120 Hz update loop, substepped ball collision, paddle angle control, 32 brick layouts and a final boss. Seven capsules implement Expand, Laser, Disrupt, Catch, Slow, Player and Break. High score and audio/CRT preferences are saved locally in the player's browser.
+**[Играть на GitHub Pages](https://mdanshin.github.io/arkanoid-retro/)**
 
-**[Play the live version](https://arkanoid-retro-cabinet.mdanshin.chatgpt.site)**
+Две версии на одном стартовом экране. Выбор запоминается в браузере.
 
-The Web Audio soundtrack is an original four-voice chiptune with three melodic patterns, bass, arpeggios and synthesized percussion. Sound effects and music have separate toggles. Audio starts after the player's first interaction. No remote asset requests, trackers or libraries are needed.
+| | Classic | Neon Horizon |
+|---|---|---|
+| Графика | Пиксельная аркада в духе Atari ST, CRT | Космическая сцена, светящиеся стеклянные блоки, частицы, шлейфы и ударные волны |
+| Звук | Оригинальный чиптюн и ретроэффекты | Оригинальный электронный саундтрек: стереосинтезаторы, пэды, бас, ударные, арпеджио, реверберация и эхо |
+| Игра | 32 раскладки блоков и финальный босс | Те же 33 сектора, серии ударов до ×8 и семисекундный Overdrive |
+| Экраны | Масштабируемый пиксельный автомат, полный экран | Высокая плотность пикселей, 4K, отдельные пропорции поля для телефона |
 
-## Controls
+В обеих версиях работают семь бонусов: расширение, лазер, мультимяч, магнит, замедление, дополнительная жизнь и переход на следующий уровень. Рекорды и настройки сохраняются локально, отдельно для каждой версии.
 
-- Move: mouse, touch drag, left/right arrows or A/D.
-- Start/launch/fire: Enter, Space or click/tap; hold Space/click to fire lasers.
-- P or Escape: pause/resume. Switching away automatically pauses.
-- R: restart. F: fullscreen (supported browsers). M: mute/unmute.
+## Управление
 
-The repository root is ready for GitHub Pages: select the `main` branch and `/ (root)` folder in **Settings → Pages**. No dependency installation or application build is needed. `make-font.py` regenerates the original bitmap alphabet and WOFF display font using fontTools.
+- **Движение:** мышь, стрелки, A/D или палец. В Neon Horizon под полем есть сенсорная панель, чтобы не закрывать игру рукой.
+- **Пуск / лазер:** пробел, Enter, щелчок или касание. Удерживайте огонь для непрерывной стрельбы с модулем L.
+- **Overdrive:** Shift или кнопка ϟ после накопления энергии. Пробивает обычные и усиленные блоки; золотые стены отражают мяч.
+- **Пауза:** P / Escape. При уходе с вкладки и смене ориентации современная игра приостанавливается.
+- **Заново:** R. **Полный экран:** F, если поддерживается браузером.
+- **Музыка:** M в Neon Horizon; в Classic M отключает или включает весь звук.
 
-This is an unofficial recreation with new level interpretations, graphics and music, inspired by Taito's Arkanoid and its Atari ST conversion. It does not include original game ROMs or extracted assets.
+Настройки Neon Horizon позволяют отдельно менять общую громкость, музыку и эффекты, выбирать качество графики, движение камеры и вибрацию. Режим «Автоматически» снижает детализацию при длительном падении частоты кадров. На больших экранах Canvas использует физическую плотность пикселей с ограничением бюджета рендеринга; интерфейс масштабируется независимо. Classic намеренно сохраняет исходную пиксельную сетку.
+
+Звук запускается после первого взаимодействия с игрой. Музыка синтезируется в Web Audio и меняет насыщенность в зависимости от комбо и Overdrive. Столкновения имеют панораму по положению на поле. Никакие записи из оригинальной игры не используются.
+
+## GitHub Pages и локальный запуск
+
+Все файлы для сайта лежат **в корне репозитория**. В **Settings → Pages** выберите **Deploy from a branch → main → / (root)**. Сборка и установка зависимостей для публикации не нужны.
+
+- `index.html` — стартовый экран с выбором версии.
+- `classic.html` — классическая игра; `game.js`, `engine.js`, `audio.js`, `style.css`.
+- `modern.html` — Neon Horizon; `modern.js`, `modern-engine.js`, `modern-audio.js`, `neon-renderer.js`, `modern-levels.js`, `neon.css`.
+- `levels.js` — общие исходные раскладки уровней.
+- `horizon.webp` — оригинальный космический фон, остальные игровые объекты рисуются программно.
+
+Для локальной игры запустите `python3 -m http.server 8000` в этой папке и откройте `http://localhost:8000`. Файлы ES-модулей требуют HTTP, поэтому открывать HTML двойным щелчком не следует. Для проверок игровой логики и ресурсов: `npm test` с Node.js 22 или новее; зависимости не нужны.
+
+Неофициальная игра, вдохновлённая Arkanoid компании Taito и её версией для Atari ST. Раскладки интерпретированы заново; графика и музыка созданы для этого проекта. ROM и извлечённые ресурсы оригинала не включены.

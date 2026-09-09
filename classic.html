@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101214">
+  <meta name="description" content="Arkanoid в духе Atari ST. 33 раунда, семь классических бонусов, финальный босс, ретро-звуки и чиптюн. Играйте мышью, клавиатурой или касанием.">
+  <title>ARKANOID — Retro Arcade</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="arcade" id="arcade">
+    <header class="masthead">
+      <a class="brand" href="index.html" style="color:inherit;text-decoration:none" aria-label="Назад к выбору версии"><span aria-hidden="true">←</span>THE ARCADE<span class="edition">/ CLASSIC</span></a>
+      <span class="system-label">ATARI ST INSPIRED <span class="tiny-square"></span> 1 PLAYER</span>
+    </header>
+    <div class="title-row"><div><p class="eyebrow">ATARI ST · BROWSER EDITION</p><h1>ARKANOID</h1></div><div class="title-meta"><span>КЛАССИКА ВОЗВРАЩАЕТСЯ</span><span class="orange">33 РАУНДА / 7 БОНУСОВ</span></div></div>
+    <div class="machine">
+      <section class="play-column" aria-label="Игровой автомат Arkanoid">
+        <div class="scoreboard" aria-label="Результаты игры"><div class="score-cell"><span class="label">1UP / СЧЁТ</span><strong id="score">000000</strong></div><div class="score-cell best"><span class="label">HI-SCORE / РЕКОРД</span><strong id="high-score">000000</strong></div><div class="score-cell round"><span class="label">РАУНД</span><strong id="round">01<span> / 33</span></strong></div></div>
+        <div class="screen-frame" id="screen-frame">
+          <div class="screen" id="screen">
+            <canvas id="game" width="480" height="568" tabindex="0" aria-label="Поле Arkanoid. Двигайте платформу мышью, стрелками или касанием. Пробел запускает мяч. P — пауза.">Для игры включите JavaScript и поддержку Canvas в браузере.</canvas>
+            <div class="crt-lines" aria-hidden="true"></div>
+            <div class="game-overlay" id="overlay">
+              <div class="overlay-body" id="overlay-body">
+                <div class="overlay-kicker" id="overlay-kicker">PLAYER ONE · ГОТОВЫ?</div>
+                <h2 id="overlay-title">ЕЩЁ ОДИН<br>РАУНД.</h2>
+                <p id="overlay-text">Разбейте все блоки.<br>Не упустите мяч.</p>
+                <button class="primary-button" id="start-button"><span class="play-triangle" aria-hidden="true"></span><span id="start-label">НАЧАТЬ ИГРУ</span><kbd>↵</kbd></button>
+                <span class="overlay-hint" id="overlay-hint">Звук включится после старта</span>
+              </div>
+            </div>
+            <div class="game-toast" id="game-toast" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="machine-bottom"><div class="life-readout"><span class="label">ЖИЗНИ</span><div id="lives" aria-label="3 жизни"><span class="mini-paddle"></span><span class="mini-paddle"></span><span class="mini-paddle"></span></div></div><div class="active-power"><span id="power-light" class="power-light"></span><span id="active-power">VAUS ГОТОВ</span></div></div>
+        <div class="game-controls"><button id="pause-button" class="control-button" disabled><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4v12M14 4v12"/></svg><span>Пауза</span><kbd>P</kbd></button><button id="restart-button" class="control-button" title="Начать новую игру"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 8a6.5 6.5 0 1 1 0 5M4 3v5h5"/></svg><span>Заново</span><kbd>R</kbd></button><button id="fullscreen-button" class="control-button fullscreen-button" aria-label="На весь экран" title="На весь экран — F"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m6 0h4v-4"/></svg><span>Весь экран</span></button><button id="fire-button" class="control-button mobile-fire"><span>ПУСК / ОГОНЬ</span></button></div>
+      </section>
+      <aside class="side-panel">
+        <section class="panel-section sound-section"><div class="section-heading"><h2>ЗВУК АВТОМАТА</h2><span class="equalizer" id="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div><div class="audio-row"><label for="sfx-toggle">Звуковые эффекты</label><button class="switch" id="sfx-toggle" role="switch" aria-checked="true" aria-label="Звуковые эффекты"><span></span></button></div><div class="audio-row"><label for="music-toggle">Чиптюн-музыка</label><button class="switch" id="music-toggle" role="switch" aria-checked="true" aria-label="Чиптюн-музыка"><span></span></button></div><div class="volume-row"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8h3l4-4v12l-4-4H3zM13 7c2 1 2 5 0 6m3-9c4 3 4 9 0 12"/></svg><label class="sr-only" for="volume">Громкость</label><input id="volume" type="range" min="0" max="100" value="55"><output id="volume-value" for="volume">55%</output></div><div class="track-label"><span class="track-dot" id="track-dot"></span><span id="track-label">ГОТОВ К ВОСПРОИЗВЕДЕНИЮ</span></div></section>
+        <section class="panel-section"><div class="section-heading"><h2>УПРАВЛЕНИЕ</h2><span class="section-number">01</span></div><div class="control-row"><span>Платформа</span><span class="key-group"><kbd>←</kbd><kbd>→</kbd><span class="or">/</span><svg viewBox="0 0 20 20" aria-label="мышь"><rect x="5" y="2" width="10" height="16" rx="5"/><path d="M10 3v5M5 8h10"/></svg></span></div><div class="control-row"><span>Пуск / выстрел</span><kbd>ПРОБЕЛ</kbd></div><div class="control-row"><span>Пауза</span><kbd>P</kbd></div><p class="touch-note">На телефоне — ведите пальцем<br>по полю, коснитесь для пуска.</p></section>
+        <section class="panel-section power-section"><div class="section-heading"><h2>ЛОВИТЕ БОНУСЫ</h2><span class="section-number">02</span></div><div class="power-list"><div><span class="capsule blue">E</span><span>Широкая платформа</span></div><div><span class="capsule red">L</span><span>Лазерная пушка</span></div><div><span class="capsule cyan">D</span><span>Три мяча</span></div><div><span class="capsule green">C</span><span>Липкая платформа</span></div><div><span class="capsule orange-cap">S</span><span>Замедление мяча</span></div><div><span class="capsule pink">P</span><span>Дополнительная жизнь</span></div><div><span class="capsule violet">B</span><span>Выход в следующий раунд</span></div></div></section>
+        <div class="tip"><span class="tip-icon" aria-hidden="true">↗</span><p>Удар краем платформы<br>меняет угол отскока.</p></div>
+        <div class="screen-setting"><span>Эффект CRT-экрана</span><button class="switch small" id="crt-toggle" role="switch" aria-checked="true" aria-label="Эффект CRT-экрана"><span></span></button></div>
+      </aside>
+    </div>
+    <footer><span>Вдохновлено Arkanoid · Taito / Atari ST</span><span>Неофициальная браузерная версия <span class="footer-blocks" aria-hidden="true">▰ ▰ ▰</span></span></footer>
+  </main>
+  <noscript>Для запуска Arkanoid необходимо включить JavaScript.</noscript>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
