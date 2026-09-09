@@ -1,7 +1,7 @@
 import {HorizonEngine, clamp} from './modern-engine.js';
 import {NeonRenderer} from './neon-renderer.js';
 import {HorizonAudio} from './modern-audio.js';
-import {SECTORS, POWERUPS} from './modern-levels.js';
+import {SECTORS} from './modern-levels.js';
 
 const $ = id => document.getElementById(id);
 const storage = {
@@ -21,10 +21,9 @@ if (!Number.isFinite(record) || record < 0) record = 0;
 const canvas = $('neon-canvas'), viewport = $('arena-viewport'), container = $('arena-container');
 const dialog = $('settings-dialog'), startButton = $('neon-start');
 const audio = new HorizonAudio(settings);
-// The legend and falling capsules use the same source of truth for symbols.
+// Module badges mirror the letter printed on every falling capsule.
 for (const module of document.querySelectorAll('[data-power]')) {
-  const power = POWERUPS[module.dataset.power];
-  if (power) module.querySelector('.module-icon').textContent = power.icon;
+  module.querySelector('.module-icon').textContent = module.dataset.power;
 }
 let game, renderer, dirty = true, toastTimer, recordTimer, lastHaptic = 0, lastPhase = '', settingsResume = false;
 const isPortrait = () => innerWidth < 700 && innerHeight > innerWidth;
