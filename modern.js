@@ -186,15 +186,18 @@ $('pause-game').addEventListener('click', pause); $('restart-game').addEventList
 $('fullscreen').addEventListener('click', fullscreen);
 $('boost-button').addEventListener('click', boost); $('touch-boost').addEventListener('click', boost);
 
-let keyboardFire = false, drag = null;
+let keyboardFire = false, drag = null, mouseControl = false;
 const firePointers = new Set();
 function updateFire() { game.keys.fire = keyboardFire || firePointers.size > 0; }
 function position(clientX) {
   const rect = canvas.getBoundingClientRect(); game.moveTo((clientX - rect.left) / rect.width * game.width);
 }
-canvas.addEventListener('pointermove', event => {
+canvas.addEventListener('pointerenter', event => {
+  if (event.pointerType === 'mouse') { mouseControl = true; position(event.clientX); }
+});
+addEventListener('pointermove', event => {
   if (dialog.open || !['playing', 'ready'].includes(game.phase)) return;
-  if (event.pointerType === 'mouse') position(event.clientX);
+  if (event.pointerType === 'mouse' && mouseControl) position(event.clientX);
   else if (drag?.id === event.pointerId && drag.surface === canvas) {
     game.moveTo(drag.target + (event.clientX - drag.startX) / canvas.getBoundingClientRect().width * game.width);
     drag.moved = Math.max(drag.moved, Math.abs(event.clientX - drag.startX));
@@ -204,7 +207,7 @@ canvas.addEventListener('pointerdown', event => {
   if (event.button !== 0 || dialog.open) return;
   event.preventDefault(); canvas.focus({preventScroll: true}); canvas.setPointerCapture(event.pointerId);
   unlockAudio();
-  if (event.pointerType === 'mouse') { position(event.clientX); firePointers.add(event.pointerId); updateFire(); primary(); }
+  if (event.pointerType === 'mouse') { mouseControl = true; position(event.clientX); firePointers.add(event.pointerId); updateFire(); primary(); }
   else drag = {id: event.pointerId, surface: canvas, startX: event.clientX, target: game.paddle.target, moved: 0};
 });
 const touchZone = $('touch-zone');

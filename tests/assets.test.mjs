@@ -27,3 +27,12 @@ test('Every fixed modern controller ID exists in modern.html', () => {
   const ids = new Set([...html.matchAll(/id="([^"]+)"/g)].map(match => match[1]));
   for (const [, id] of js.matchAll(/\$\('([^']+)'\)/g)) assert(ids.has(id), `Missing UI element ${id}`);
 });
+test('Both editions keep mouse control after the cursor leaves the canvas', () => {
+  const classic = readFileSync(join(root, 'game.js'), 'utf8');
+  const modern = readFileSync(join(root, 'modern.js'), 'utf8');
+  for (const [name, source] of [['Classic', classic], ['Neon Horizon', modern]]) {
+    assert.match(source, /pointerenter/);
+    assert.match(source, /(?:window\.)?addEventListener\('pointermove'/, `${name} must listen outside the canvas`);
+    assert.match(source, /mouseControl/);
+  }
+});

@@ -8,7 +8,7 @@ let settings={sfx:true,music:true,volume:.55,crt:true},highScore=0;
 try {settings={...settings,...JSON.parse(localStorage.getItem('arkanoid-settings')||'{}')};highScore=Number(localStorage.getItem('arkanoid-high-score'))||0;}catch{}
 settings.volume=clamp(Number(settings.volume)||0,0,1);
 const audio=new ArcadeAudio(settings);
-let readySound=false,toastTimer=0,lastPhase='menu',lastScore=-1,lastHigh=-1,activePointer=null,pointerStart=null;
+let readySound=false,toastTimer=0,lastPhase='menu',lastScore=-1,lastHigh=-1,activePointer=null,pointerStart=null,mouseControl=false;
 const game=new Engine(handleEvent);
 let background=null,backgroundLevel=-1;
 function persist(){try{localStorage.setItem('arkanoid-settings',JSON.stringify(settings));localStorage.setItem('arkanoid-high-score',String(highScore));}catch{}}
@@ -189,9 +189,16 @@ $('pause-button').addEventListener('click',()=>{game.pause();if(game.phase!=='pa
 $('fire-button').addEventListener('pointerdown',e=>{e.preventDefault();primaryAction();game.keys.fire=true;});
 window.addEventListener('pointerup',()=>{game.keys.fire=false;});
 function pointerX(e){const rect=canvas.getBoundingClientRect();return(e.clientX-rect.left)/rect.width*WIDTH;}
-canvas.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.pointerId===activePointer){game.moveTo(pointerX(e));if(pointerStart)pointerStart.moved=Math.max(pointerStart.moved,Math.abs(e.clientX-pointerStart.x));}});
+// Once the pointer has entered the playfield, keep following its horizontal
+// position across the whole page. moveTo() clamps the paddle at the arena edge.
+// This prevents control from stopping when the cursor leaves the canvas.
+canvas.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){mouseControl=true;game.moveTo(pointerX(e));}});
+window.addEventListener('pointermove',e=>{
+  if(e.pointerType==='mouse'&&mouseControl&&['ready','playing'].includes(game.phase))game.moveTo(pointerX(e));
+  if(e.pointerId===activePointer&&pointerStart)pointerStart.moved=Math.max(pointerStart.moved,Math.abs(e.clientX-pointerStart.x));
+});
 canvas.addEventListener('pointerdown',e=>{
-  e.preventDefault();activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);canvas.focus({preventScroll:true});
+  e.preventDefault();activePointer=e.pointerId;if(e.pointerType==='mouse')mouseControl=true;canvas.setPointerCapture(e.pointerId);canvas.focus({preventScroll:true});
   pointerStart={x:e.clientX,moved:0,wasReady:game.phase==='ready'};game.moveTo(pointerX(e));
   if(e.pointerType==='mouse'){primaryAction();game.keys.fire=true;}else unlockAudio();
 });
