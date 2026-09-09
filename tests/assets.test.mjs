@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync, existsSync, readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {join, dirname} from 'node:path';
+import {POWERUPS} from '../modern-levels.js';
 const root = fileURLToPath(new URL('../', import.meta.url));
 test('All three entry pages, CSS and module imports resolve within a Pages subdirectory', () => {
   for (const name of readdirSync(root).filter(file => /\.(html|css|js)$/.test(file))) {
@@ -35,4 +36,16 @@ test('Both editions keep mouse control after the cursor leaves the canvas', () =
     assert.match(source, /(?:window\.)?addEventListener\('pointermove'/, `${name} must listen outside the canvas`);
     assert.match(source, /mouseControl/);
   }
+});
+test('Modern falling capsules and module legend share the same icons', () => {
+  const html = readFileSync(join(root, 'modern.html'), 'utf8');
+  const renderer = readFileSync(join(root, 'neon-renderer.js'), 'utf8');
+  const controller = readFileSync(join(root, 'modern.js'), 'utf8');
+  for (const [code, power] of Object.entries(POWERUPS)) {
+    const match = html.match(new RegExp(`data-power="${code}"[^>]*>\\s*<span[^>]*>([^<]+)</span>`));
+    assert(match, `Missing ${code} in module legend`);
+    assert.equal(match[1], power.icon, `${code} legend icon must match its capsule`);
+  }
+  assert.match(renderer, /fillText\(p\.icon,/);
+  assert.match(controller, /POWERUPS\[module\.dataset\.power\]/);
 });
