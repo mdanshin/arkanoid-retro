@@ -251,7 +251,7 @@ document.addEventListener('keydown', event => {
     if (event.code === 'KeyR') restart();
     if (event.code === 'KeyF') fullscreen();
     if (event.code === 'KeyM') toggleMusic();
-    if (['ShiftLeft', 'ShiftRight'].includes(event.code)) { event.preventDefault(); boost(); }
+    if (event.code === 'KeyE' || ['ShiftLeft', 'ShiftRight'].includes(event.code)) { event.preventDefault(); boost(); }
   }
 });
 document.addEventListener('keyup', event => {
